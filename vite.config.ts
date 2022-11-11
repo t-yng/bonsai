@@ -4,7 +4,7 @@ import solidPlugin from "vite-plugin-solid";
 
 export default defineConfig(({ mode }) => ({
   root: "./renderer",
-  base: mode === "production" ? "" : "/",
+  base: "",
   plugins: [solidPlugin()],
   server: {
     port: 3000,

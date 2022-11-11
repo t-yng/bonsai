@@ -9,10 +9,10 @@
     "asar": false
   },
   "scripts": {
-    "dev": "yarn build:renderer && yarn build:electron && electron .",
+    "dev": "yarn build:renderer && yarn build:electron && electron . & yarn watch:renderer & yarn watch:electron",
     "dev:renderer": "vite",
     "build:renderer": "vite build",
-    "watch:renderer": "vite build --watch",
+    "watch:renderer": "vite build --watch --mode 'development'",
     "build:electron": "yarn tsc:electron",
     "watch:electron": "yarn tsc:electron -w",
     "tsc:electron": "tsc -p tsconfig.electron.json"
