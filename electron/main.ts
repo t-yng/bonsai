@@ -2,9 +2,17 @@ import { app, BrowserWindow, dialog, ipcMain } from "electron";
 import electronReload from "electron-reload";
 import path from "path";
 import fs from "fs";
+import { Image } from "@common/models/Image";
 
 electronReload(__dirname, {
-  electron: path.join(__dirname, "..", "node_modules", ".bin", "electron"),
+  electron: path.join(
+    __dirname,
+    "..",
+    "..",
+    "node_modules",
+    ".bin",
+    "electron"
+  ),
   hardResetMethod: "exit",
 });
 
@@ -17,7 +25,7 @@ const createWindow = () => {
     },
   });
 
-  win.loadFile(path.join(__dirname, "index.html"));
+  win.loadFile(path.join(__dirname, "..", "index.html"));
 };
 
 app.on("window-all-closed", () => {
@@ -25,15 +33,31 @@ app.on("window-all-closed", () => {
 });
 
 app.whenReady().then(() => {
+  let images: Image[] = [];
+
   ipcMain.handle("loadImages", async () => {
     const result = await dialog.showOpenDialog({
       properties: ["openFile", "multiSelections"],
       filters: [{ name: "Images", extensions: ["png", "jpg", "jpeg"] }],
     });
 
-    return result.filePaths.map((filePath) => {
-      return fs.readFileSync(filePath).toString("base64");
+    images = result.filePaths.map<Image>((filePath) => {
+      return {
+        filePath,
+        base64: fs.readFileSync(filePath).toString("base64"),
+      };
     });
+
+    return images;
+  });
+
+  ipcMain.handle("removeImages", (_event, filePaths: string[]) => {
+    for (const filePath of filePaths) {
+      const target = images.find((image) => filePath === image.filePath);
+      if (target) {
+        fs.unlinkSync(target.filePath);
+      }
+    }
   });
 
   createWindow();

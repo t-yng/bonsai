@@ -4,12 +4,13 @@
   "description": "Hello World!",
   "author": "Jane Doe",
   "license": "MIT",
-  "main": "./dist/main.js",
+  "main": "./dist/electron/main.js",
   "build": {
     "asar": false
   },
   "scripts": {
     "dev": "yarn build:renderer && yarn build:electron && electron . & yarn watch:renderer & yarn watch:electron",
+    "build": "yarn build:renderer && yarn build:electron",
     "dev:renderer": "vite",
     "build:renderer": "vite build",
     "watch:renderer": "vite build --watch --mode 'development'",

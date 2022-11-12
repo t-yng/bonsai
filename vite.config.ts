@@ -5,6 +5,11 @@ import solidPlugin from "vite-plugin-solid";
 export default defineConfig(({ mode }) => ({
   root: "./renderer",
   base: "",
+  resolve: {
+    alias: {
+      "@common/": path.join(__dirname, "common/"),
+    },
+  },
   plugins: [solidPlugin()],
   server: {
     port: 3000,

@@ -5,7 +5,11 @@
     "moduleResolution": "node",
     "esModuleInterop": true,
     "noEmit": false,
-    "outDir": "dist"
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "@common/*": ["./common/*"]
+    }
   },
   "include": ["./electron/*.ts"]
 }
