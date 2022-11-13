@@ -5,6 +5,7 @@ import { ImageGroup } from "./components/ImageGroup";
 
 const App: Component = () => {
   const [images, setImages] = createSignal<Image[]>(dummyImages);
+  const [groups, setGroups] = createSignal<Image[][]>([]);
   const [selectedImages, setSelectedImages] = createSignal<Image[]>([]);
 
   const loadImages = async () => {
@@ -19,6 +20,12 @@ const App: Component = () => {
       (img) => !removedFilePaths.includes(img.filePath)
     );
     setImages(restImages);
+  };
+
+  const groupSimilarImages = async () => {
+    const groups = await window.ipc.groupSimilarImages();
+    console.log(groups);
+    setGroups(groups);
   };
 
   const selectImage = (image: Image, selected: boolean) => {
@@ -41,15 +48,17 @@ const App: Component = () => {
       <button onClick={removeImages} disabled={selectedImages().length === 0}>
         削除
       </button>
-      <Gallery images={images()} onSelect={selectImage} />
-      {/* <div style={{ display: "flex", gap: 24 + "px", "flex-wrap": "wrap" }}>
-        <ImageGroup images={dummyImages} />
-        <ImageGroup images={dummyImages} />
-        <ImageGroup images={dummyImages} />
-        <ImageGroup images={dummyImages} />
-        <ImageGroup images={dummyImages} />
-        <ImageGroup images={dummyImages} />
-      </div> */}
+      <button onClick={groupSimilarImages}>類似画像をまとめる</button>
+      {groups().length === 0 && (
+        <Gallery images={images()} onSelect={selectImage} />
+      )}
+      {groups().length > 0 && (
+        <div style={{ display: "flex", gap: 24 + "px", "flex-wrap": "wrap" }}>
+          <For each={groups()}>
+            {(images) => <ImageGroup images={images} />}
+          </For>
+        </div>
+      )}
     </>
   );
 };

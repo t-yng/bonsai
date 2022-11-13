@@ -1,8 +1,9 @@
+import { Image } from "@common/models/Image";
 import { Component, For } from "solid-js";
 import styles from "./ImageGroup.module.css";
 
 type ImageGroupProps = {
-  images: string[];
+  images: Image[];
 };
 
 const SHIFT_BASE = 8;
@@ -15,7 +16,7 @@ export const ImageGroup: Component<ImageGroupProps> = ({ images }) => {
           const shift = SHIFT_BASE * i();
           return (
             <img
-              src={image}
+              src={`data:image/jpg;base64,${image.base64}`}
               style={{ top: `${shift}px`, left: `${shift}px` }}
               class={styles.image}
             />

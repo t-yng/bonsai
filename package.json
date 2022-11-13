@@ -5,9 +5,6 @@
   "author": "Jane Doe",
   "license": "MIT",
   "main": "./dist/electron/main.js",
-  "build": {
-    "asar": false
-  },
   "scripts": {
     "dev": "yarn build:renderer && yarn build:electron && electron . & yarn watch:renderer & yarn watch:electron",
     "build": "yarn build:renderer && yarn build:electron",
@@ -19,6 +16,7 @@
     "tsc:electron": "tsc -p tsconfig.electron.json"
   },
   "devDependencies": {
+    "@types/js-levenshtein": "^1.1.1",
     "electron": "^21.2.2",
     "electron-reload": "^2.0.0-alpha.1",
     "typescript": "^4.8.4",
@@ -27,7 +25,7 @@
   },
   "dependencies": {
     "imghash": "^0.0.9",
-    "leven": "^4.0.0",
+    "js-levenshtein": "^1.1.6",
     "solid-js": "^1.6.1"
   }
 }

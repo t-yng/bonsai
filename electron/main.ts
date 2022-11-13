@@ -3,6 +3,7 @@ import electronReload from "electron-reload";
 import path from "path";
 import fs from "fs";
 import { Image } from "@common/models/Image";
+import { groupSimilarImages } from "./groupImages";
 
 electronReload(__dirname, {
   electron: path.join(
@@ -58,6 +59,10 @@ app.whenReady().then(() => {
         fs.unlinkSync(target.filePath);
       }
     }
+  });
+
+  ipcMain.handle("groupSimilarImages", () => {
+    return groupSimilarImages(images);
   });
 
   createWindow();

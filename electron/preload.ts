@@ -9,4 +9,7 @@ contextBridge.exposeInMainWorld("ipc", {
   removeImages: (filePaths: string[]) => {
     return ipcRenderer.invoke("removeImages", filePaths);
   },
+  groupSimilarImages: () => {
+    return ipcRenderer.invoke("groupSimilarImages");
+  },
 });
