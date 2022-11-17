@@ -4,13 +4,19 @@ import styles from "./ImageGroup.module.css";
 
 type ImageGroupProps = {
   images: Image[];
+  onClick?: (images: Image[]) => void;
 };
 
 const SHIFT_BASE = 8;
 
-export const ImageGroup: Component<ImageGroupProps> = ({ images }) => {
+export const ImageGroup: Component<ImageGroupProps> = ({ images, onClick }) => {
   return (
-    <div class={styles.imageGroup}>
+    <div
+      class={styles.imageGroup}
+      onClick={() => {
+        onClick?.(images);
+      }}
+    >
       <For each={images}>
         {(image, i) => {
           const shift = SHIFT_BASE * i();
