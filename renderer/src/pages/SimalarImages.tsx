@@ -1,5 +1,5 @@
 import { Image } from "@common/models/Image";
-import { Toolbar } from "@renderer/components/Toolbar";
+// import { Toolbar } from "@renderer/components/Toolbar";
 import { useNavigate } from "@solidjs/router";
 import { Component, createSignal } from "solid-js";
 import { Gallery } from "../components/Gallery/Gallery";
@@ -23,14 +23,14 @@ const SimilarImagesPage: Component = () => {
       >
         戻る
       </button>
-      <Toolbar
+      {/* <Toolbar
         images={selectedImages()}
         visible={{
           load: false,
           group: false,
           remove: true,
         }}
-      />
+      /> */}
       <Gallery
         images={getSimilarImages(state.selectedSimilarGroupId)}
         onSelect={setSelectedImages}

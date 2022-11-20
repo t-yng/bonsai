@@ -1,38 +1,26 @@
-import { Image as ImageModel } from "@common/models/Image";
-import { Component, createSignal, For } from "solid-js";
+import { useAppStore } from "@renderer/store/AppStore";
+import { Component, For } from "solid-js";
 import { Image } from "../Image";
 import styles from "./Gallery.module.css";
 
-type GalleryProps = {
-  images: ImageModel[];
-  onSelect?: (selectedImages: ImageModel[]) => void;
-};
+type GalleryProps = {};
 
-export const Gallery: Component<GalleryProps> = (props) => {
-  const [selectedImages, setSelectedImages] = createSignal<ImageModel[]>([]);
-
-  const handleSelect = (image: ImageModel, selected: boolean) => {
-    let updatedImages = selectedImages();
-    if (selected) {
-      updatedImages = setSelectedImages([...selectedImages(), image]);
-    } else {
-      const images = selectedImages().filter(
-        (selectedImage) => selectedImage.filePath !== image.filePath
-      );
-      updatedImages = setSelectedImages(images);
-    }
-    props.onSelect?.(updatedImages);
-  };
+export const Gallery: Component<GalleryProps> = () => {
+  const [state, { selectImage, unSelectImage }] = useAppStore();
 
   return (
     <div class={styles.gallery}>
-      <For each={props.images}>
+      <For each={state.images}>
         {(image) => (
           <Image
             src={`data:image/jpg;base64,${image.base64}`}
             class={styles.image}
             onSelect={(selected: boolean) => {
-              handleSelect(image, selected);
+              if (selected) {
+                selectImage(image);
+              } else {
+                unSelectImage(image);
+              }
             }}
           />
         )}

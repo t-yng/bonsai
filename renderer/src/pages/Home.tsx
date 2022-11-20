@@ -1,43 +1,69 @@
-import { Image } from "@common/models/Image";
-import { Toolbar } from "@renderer/components/Toolbar";
+import { Button } from "@renderer/components/Button";
+import { EmptyImage } from "@renderer/components/EmptyState";
+import { Header } from "@renderer/components/Header";
 import { useNavigate } from "@solidjs/router";
-import { Component, createSignal, For } from "solid-js";
+import { Component, createEffect, For, Show } from "solid-js";
 import { Gallery } from "../components/Gallery/Gallery";
 import { ImageGroup } from "../components/ImageGroup";
 import { useAppStore } from "../store/AppStore";
+import styles from "./Home.module.css";
+import RoundedAdd from "~icons/material-symbols/add-rounded";
+import { useToolbar } from "@renderer/hooks/useToolbar";
+import { Main } from "@renderer/components/Main";
 
 const Home: Component = () => {
-  const [selectedImages, setSelectedImages] = createSignal<Image[]>([]);
   const [state, { setSimilarImageGroup, getSimilarImageGroups }] =
     useAppStore();
   const navigate = useNavigate();
+  const { loadImages, setVisible } = useToolbar();
 
-  const selectImage = (images: Image[]) => {
-    setSelectedImages(images);
-  };
+  createEffect(() => {
+    setVisible({
+      group: state.images.length > 0,
+      load: state.images.length > 0,
+      remove: state.images.length > 0,
+    });
+  });
 
   return (
     <>
-      <Toolbar images={selectedImages()} />
-      {getSimilarImageGroups().length === 0 && (
-        <Gallery images={state.images} onSelect={selectImage} />
-      )}
-      {getSimilarImageGroups().length > 0 && (
-        <div style={{ display: "flex", gap: 24 + "px", "flex-wrap": "wrap" }}>
-          <For each={getSimilarImageGroups()}>
-            {(images) => (
-              <ImageGroup
-                groupId={images[0].similarGroupId as string}
-                images={images}
-                onClick={(groupId) => {
-                  setSimilarImageGroup(groupId);
-                  navigate("/image-group");
-                }}
-              />
-            )}
-          </For>
-        </div>
-      )}
+      <Header />
+      <Main>
+        <Show
+          when={state.images.length > 0}
+          fallback={
+            <div class={styles.emptyImageContent}>
+              <div class={styles.emptyImageWrapper}>
+                <EmptyImage />
+              </div>
+              <Button icon={RoundedAdd} onClick={() => loadImages()}>
+                画像を読み込む
+              </Button>
+            </div>
+          }
+        >
+          {getSimilarImageGroups().length === 0 && <Gallery />}
+          {/* TODO: SimilarImageGallery を実装 */}
+          {getSimilarImageGroups().length > 0 && (
+            <div
+              style={{ display: "flex", gap: 24 + "px", "flex-wrap": "wrap" }}
+            >
+              <For each={getSimilarImageGroups()}>
+                {(images) => (
+                  <ImageGroup
+                    groupId={images[0].similarGroupId as string}
+                    images={images}
+                    onClick={(groupId) => {
+                      setSimilarImageGroup(groupId);
+                      navigate("/image-group");
+                    }}
+                  />
+                )}
+              </For>
+            </div>
+          )}
+        </Show>
+      </Main>
     </>
   );
 };

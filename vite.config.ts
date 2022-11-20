@@ -1,6 +1,7 @@
 import path from "path";
 import { defineConfig } from "vite";
 import solidPlugin from "vite-plugin-solid";
+import Icons from "unplugin-icons/vite";
 
 export default defineConfig(({ mode }) => ({
   root: "./renderer",
@@ -11,7 +12,7 @@ export default defineConfig(({ mode }) => ({
       "@renderer/": path.join(__dirname, "renderer/src/"),
     },
   },
-  plugins: [solidPlugin()],
+  plugins: [solidPlugin(), Icons({ compiler: "solid" })],
   server: {
     port: 3000,
   },

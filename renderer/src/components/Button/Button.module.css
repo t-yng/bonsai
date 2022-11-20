@@ -1,0 +1,29 @@
+.button {
+  display: flex;
+  align-items: center;
+  border-radius: 48px;
+  padding: 8px 12px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.primary {
+  background-color: black;
+  color: white;
+  border: none;
+}
+
+.outline {
+  border: 1px solid black;
+  color: black;
+}
+
+.button:hover {
+  background-color: #696969;
+}
+
+.icon {
+  margin-right: 4px;
+  width: 24px;
+  height: 24px;
+}
