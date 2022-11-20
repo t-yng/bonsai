@@ -3,21 +3,22 @@ import { Component, For } from "solid-js";
 import styles from "./ImageGroup.module.css";
 
 type ImageGroupProps = {
+  groupId: string;
   images: Image[];
-  onClick?: (images: Image[]) => void;
+  onClick?: (groupId: string) => void;
 };
 
 const SHIFT_BASE = 8;
 
-export const ImageGroup: Component<ImageGroupProps> = ({ images, onClick }) => {
+export const ImageGroup: Component<ImageGroupProps> = (props) => {
   return (
     <div
       class={styles.imageGroup}
       onClick={() => {
-        onClick?.(images);
+        props.onClick?.(props.groupId);
       }}
     >
-      <For each={images}>
+      <For each={props.images}>
         {(image, i) => {
           const shift = SHIFT_BASE * i();
           return (

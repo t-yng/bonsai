@@ -8,6 +8,7 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@common/": path.join(__dirname, "common/"),
+      "@renderer/": path.join(__dirname, "renderer/src/"),
     },
   },
   plugins: [solidPlugin()],

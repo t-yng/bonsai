@@ -13,7 +13,8 @@
     "isolatedModules": true,
     "baseUrl": ".",
     "paths": {
-      "@common/*": ["./common/*"]
+      "@common/*": ["./common/*"],
+      "@renderer/*": ["./renderer/src/*"]
     }
   }
 }

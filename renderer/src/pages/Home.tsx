@@ -1,4 +1,5 @@
 import { Image } from "@common/models/Image";
+import { Toolbar } from "@renderer/components/Toolbar";
 import { useNavigate } from "@solidjs/router";
 import { Component, createSignal, For } from "solid-js";
 import { Gallery } from "../components/Gallery/Gallery";
@@ -6,65 +7,30 @@ import { ImageGroup } from "../components/ImageGroup";
 import { useAppStore } from "../store/AppStore";
 
 const Home: Component = () => {
-  const [images, setImages] = createSignal<Image[]>(dummyImages);
-  const [groups, setGroups] = createSignal<Image[][]>([]);
   const [selectedImages, setSelectedImages] = createSignal<Image[]>([]);
-  const [, { setImageGroup }] = useAppStore();
+  const [state, { setSimilarImageGroup, getSimilarImageGroups }] =
+    useAppStore();
   const navigate = useNavigate();
 
-  const loadImages = async () => {
-    const images = await window.ipc.loadImages();
-    setImages(images);
-  };
-
-  const removeImages = async () => {
-    const removedFilePaths = selectedImages().map((img) => img.filePath);
-    await window.ipc.removeImages(removedFilePaths);
-    const restImages = images().filter(
-      (img) => !removedFilePaths.includes(img.filePath)
-    );
-    setImages(restImages);
-  };
-
-  const groupSimilarImages = async () => {
-    const groups = await window.ipc.groupSimilarImages();
-    console.log(groups);
-    setGroups(groups);
-  };
-
-  const selectImage = (image: Image, selected: boolean) => {
-    setSelectedImages((selectedImages) => {
-      if (selected) {
-        return [...selectedImages, image];
-      } else {
-        return [
-          ...selectedImages.filter(
-            (selectedImage) => selectedImage.filePath !== image.filePath
-          ),
-        ];
-      }
-    });
+  const selectImage = (images: Image[]) => {
+    setSelectedImages(images);
   };
 
   return (
     <>
-      <button onClick={loadImages}>画像読み込み</button>
-      <button onClick={removeImages} disabled={selectedImages().length === 0}>
-        削除
-      </button>
-      <button onClick={groupSimilarImages}>類似画像をまとめる</button>
-      {groups().length === 0 && (
-        <Gallery images={images()} onSelect={selectImage} />
+      <Toolbar images={selectedImages()} />
+      {getSimilarImageGroups().length === 0 && (
+        <Gallery images={state.images} onSelect={selectImage} />
       )}
-      {groups().length > 0 && (
+      {getSimilarImageGroups().length > 0 && (
         <div style={{ display: "flex", gap: 24 + "px", "flex-wrap": "wrap" }}>
-          <For each={groups()}>
+          <For each={getSimilarImageGroups()}>
             {(images) => (
               <ImageGroup
+                groupId={images[0].similarGroupId as string}
                 images={images}
-                onClick={(images) => {
-                  console.log(images);
-                  setImageGroup(images);
+                onClick={(groupId) => {
+                  setSimilarImageGroup(groupId);
                   navigate("/image-group");
                 }}
               />
