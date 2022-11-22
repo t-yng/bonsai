@@ -1,4 +1,4 @@
-import { Component } from "solid-js";
+import { Component, createSignal } from "solid-js";
 import { Image } from "@common/models/Image";
 import { StoredImage } from "@renderer/store/AppStore";
 import { useToolbar } from "@renderer/hooks/useToolbar";
@@ -18,27 +18,38 @@ type ToolbarProps = {
   onLoadImages?: (images: Image[]) => void;
   onRemoveImages?: (removedImages: Image[]) => void;
   onGroupSimilarImages?: (images: StoredImage[]) => void;
-  // visible?: FeatureVisible;
 };
 
 export const Toolbar: Component<ToolbarProps> = (props) => {
-  const { loadImages, removeImages, groupSimilarImages, visible } =
-    useToolbar();
+  const [groupedImage, setGroupedImage] = createSignal();
+  const {
+    loadImages,
+    removeImages,
+    groupSimilarImages,
+    unGroupSimilarImages,
+    visible,
+  } = useToolbar();
 
   return (
     <div class={styles.toolbar}>
       <div class={styles.targetActionWrapper}>
         {visible.group && (
-          <Button variant="outline" onClick={() => groupSimilarImages()}>
+          <Button
+            variant={groupedImage() ? "primary" : "outline"}
+            onClick={() => {
+              if (groupedImage()) {
+                unGroupSimilarImages();
+              } else {
+                groupSimilarImages();
+              }
+              setGroupedImage((grouped) => !grouped);
+            }}
+          >
             類似画像をまとめる
           </Button>
         )}
         {visible.remove && (
-          <Button
-            icon={Delete}
-            onClick={() => removeImages()}
-            // disabled={!props.images}
-          >
+          <Button icon={Delete} onClick={() => removeImages()}>
             削除
           </Button>
         )}

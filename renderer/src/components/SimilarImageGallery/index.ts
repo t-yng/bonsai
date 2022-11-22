@@ -1,0 +1,1 @@
+export { SimilarImageGallery } from "./SimilarImageGallery";

@@ -101,10 +101,21 @@ export const useToolbar = () => {
     onGroup?.(groupedImages);
   };
 
+  const unGroupSimilarImages = () => {
+    const unGroupedImages = appState.images.map((image) => {
+      return {
+        ...image,
+        similarGroupId: null,
+      };
+    });
+    setImages([...unGroupedImages]);
+  };
+
   return {
     loadImages,
     removeImages,
     groupSimilarImages,
+    unGroupSimilarImages,
     ...toolbarState,
     setVisible,
   };

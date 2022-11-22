@@ -4,12 +4,12 @@ import { Header } from "@renderer/components/Header";
 import { useNavigate } from "@solidjs/router";
 import { Component, createEffect, For, Show } from "solid-js";
 import { Gallery } from "../components/Gallery/Gallery";
-import { ImageGroup } from "../components/ImageGroup";
 import { useAppStore } from "../store/AppStore";
 import styles from "./Home.module.css";
 import RoundedAdd from "~icons/material-symbols/add-rounded";
 import { useToolbar } from "@renderer/hooks/useToolbar";
 import { Main } from "@renderer/components/Main";
+import { SimilarImageGallery } from "@renderer/components/SimilarImageGallery";
 
 const Home: Component = () => {
   const [state, { setSimilarImageGroup, getSimilarImageGroups }] =
@@ -43,24 +43,8 @@ const Home: Component = () => {
           }
         >
           {getSimilarImageGroups().length === 0 && <Gallery />}
-          {/* TODO: SimilarImageGallery を実装 */}
           {getSimilarImageGroups().length > 0 && (
-            <div
-              style={{ display: "flex", gap: 24 + "px", "flex-wrap": "wrap" }}
-            >
-              <For each={getSimilarImageGroups()}>
-                {(images) => (
-                  <ImageGroup
-                    groupId={images[0].similarGroupId as string}
-                    images={images}
-                    onClick={(groupId) => {
-                      setSimilarImageGroup(groupId);
-                      navigate("/image-group");
-                    }}
-                  />
-                )}
-              </For>
-            </div>
+            <SimilarImageGallery similarImageGroups={getSimilarImageGroups()} />
           )}
         </Show>
       </Main>

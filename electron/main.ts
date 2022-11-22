@@ -19,14 +19,14 @@ electronReload(__dirname, {
 
 const createWindow = () => {
   const win = new BrowserWindow({
-    width: 800,
-    height: 400,
+    show: false,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
     },
   });
-
+  win.maximize();
   win.loadFile(path.join(__dirname, "..", "index.html"));
+  win.show();
 };
 
 app.on("window-all-closed", () => {
