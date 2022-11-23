@@ -12,7 +12,7 @@ import styles from "./SimilarImages.module.css";
 const SimilarImagesPage: Component = () => {
   const [state] = useAppStore();
   const [images, setImages] = createSignal<Image[]>([]);
-  const { setVisible } = useToolbar();
+  const [, { setVisible }] = useToolbar();
   const navigate = useNavigate();
 
   setVisible({
