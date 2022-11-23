@@ -1,0 +1,13 @@
+.titleBlock {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.backLink {
+  display: flex;
+}
+
+.arrowBackIcon {
+  font-size: 24px;
+}

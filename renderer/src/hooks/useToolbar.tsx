@@ -18,18 +18,22 @@ type ActionVisible = {
 
 type ToolbarState = {
   visible: ActionVisible;
+  grouped: boolean;
 };
 
 type Dispatcher = {
   setVisible: (visible: ActionVisible) => void;
+  setGrouped: (grouped: boolean) => void;
 };
 
 const ToolbarContext = createContext<[ToolbarState, Dispatcher]>([
   {
     visible: {},
+    grouped: false,
   },
   {
     setVisible: () => {},
+    setGrouped: () => {},
   },
 ]);
 
@@ -40,6 +44,7 @@ export const ToolbarProvider: Component<ParentProps> = (props) => {
       remove: true,
       load: true,
     },
+    grouped: false,
   });
 
   const value: [ToolbarState, Dispatcher] = [
@@ -47,6 +52,9 @@ export const ToolbarProvider: Component<ParentProps> = (props) => {
     {
       setVisible(visible) {
         setState("visible", { ...state.visible, ...visible });
+      },
+      setGrouped(grouped) {
+        setState("grouped", grouped);
       },
     },
   ];
@@ -59,7 +67,7 @@ export const ToolbarProvider: Component<ParentProps> = (props) => {
 };
 
 export const useToolbar = () => {
-  const [toolbarState, { setVisible }] = useContext(ToolbarContext);
+  const [toolbarState, toolbarDispatcher] = useContext(ToolbarContext);
   const [appState, { setImages, unSelectImageAll }] = useAppStore();
 
   const loadImages = async (onLoad?: (images: Image[]) => void) => {
@@ -115,6 +123,6 @@ export const useToolbar = () => {
     groupSimilarImages,
     unGroupSimilarImages,
     ...toolbarState,
-    setVisible,
+    ...toolbarDispatcher,
   };
 };

@@ -1,4 +1,4 @@
-import { Component, createSignal } from "solid-js";
+import { Component } from "solid-js";
 import { Image } from "@common/models/Image";
 import { StoredImage } from "@renderer/store/AppStore";
 import { useToolbar } from "@renderer/hooks/useToolbar";
@@ -21,13 +21,14 @@ type ToolbarProps = {
 };
 
 export const Toolbar: Component<ToolbarProps> = (props) => {
-  const [groupedImage, setGroupedImage] = createSignal();
   const {
     loadImages,
     removeImages,
     groupSimilarImages,
     unGroupSimilarImages,
+    setGrouped,
     visible,
+    grouped,
   } = useToolbar();
 
   return (
@@ -35,14 +36,14 @@ export const Toolbar: Component<ToolbarProps> = (props) => {
       <div class={styles.targetActionWrapper}>
         {visible.group && (
           <Button
-            variant={groupedImage() ? "primary" : "outline"}
+            variant={grouped ? "primary" : "outline"}
             onClick={() => {
-              if (groupedImage()) {
+              if (grouped) {
                 unGroupSimilarImages();
               } else {
                 groupSimilarImages();
               }
-              setGroupedImage((grouped) => !grouped);
+              setGrouped(!grouped);
             }}
           >
             類似画像をまとめる
