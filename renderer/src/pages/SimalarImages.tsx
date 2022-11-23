@@ -1,21 +1,38 @@
 import { Image } from "@common/models/Image";
-// import { Toolbar } from "@renderer/components/Toolbar";
+import { EmptyImage } from "@renderer/components/EmptyState";
+import { Header, useToolbar } from "@renderer/components/Header";
 import { useNavigate } from "@solidjs/router";
-import { Component, createSignal } from "solid-js";
+import { Component, createEffect, createSignal, Show } from "solid-js";
 import { Gallery } from "../components/Gallery/Gallery";
 import { useAppStore } from "../store/AppStore";
 
 const SimilarImagesPage: Component = () => {
-  const [state, { getSimilarImages }] = useAppStore();
-  const [selectedImages, setSelectedImages] = createSignal<Image[]>([]);
+  const [state] = useAppStore();
+  const [images, setImages] = createSignal<Image[]>([]);
+  const { setVisible } = useToolbar();
   const navigate = useNavigate();
 
-  if (state.selectedSimilarGroupId == null) {
-    return <div>エラーが発生しました。類似画像が存在しません。</div>;
-  }
+  setVisible({
+    group: false,
+    load: false,
+    remove: true,
+  });
+
+  createEffect(() => {
+    if (state.selectedSimilarGroupId == null) {
+      setImages([]);
+    } else {
+      setImages(
+        state.images.filter(
+          (image) => image.similarGroupId === state.selectedSimilarGroupId
+        )
+      );
+    }
+  });
 
   return (
     <>
+      <Header />
       <button
         onClick={() => {
           navigate("/");
@@ -23,18 +40,9 @@ const SimilarImagesPage: Component = () => {
       >
         戻る
       </button>
-      {/* <Toolbar
-        images={selectedImages()}
-        visible={{
-          load: false,
-          group: false,
-          remove: true,
-        }}
-      /> */}
-      <Gallery
-        images={getSimilarImages(state.selectedSimilarGroupId)}
-        onSelect={setSelectedImages}
-      />
+      <Show when={images().length > 0} fallback={<EmptyImage />}>
+        <Gallery images={images()} />
+      </Show>
     </>
   );
 };

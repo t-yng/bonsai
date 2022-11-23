@@ -19,7 +19,7 @@ type StoreDispatcher = {
   setSimilarImageGroup: (groupId: SimilarImageGroupId) => void;
   selectImage: (image: StoredImage) => void;
   unSelectImage: (image: StoredImage) => void;
-  getSimilarImages: (groupId: string) => StoredImage[];
+  unSelectImageAll: () => void;
   getSimilarImageGroups: () => StoredImage[][];
 };
 
@@ -29,8 +29,8 @@ export const AppStoreContext = createContext<[StoreState, StoreDispatcher]>([
     setImages: () => {},
     selectImage: () => {},
     unSelectImage: () => {},
+    unSelectImageAll: () => {},
     setSimilarImageGroup: () => {},
-    getSimilarImages: () => [],
     getSimilarImageGroups: () => [],
   },
 ]);
@@ -69,8 +69,8 @@ export const AppStoreProvider: Component<ParentProps> = (props) => {
           ]);
         }
       },
-      getSimilarImages(groupId: string) {
-        return state.images.filter((image) => image.similarGroupId === groupId);
+      unSelectImageAll() {
+        setState("selectedImages", []);
       },
       getSimilarImageGroups() {
         const groups: StoredImage[][] = [];

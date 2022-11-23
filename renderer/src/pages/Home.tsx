@@ -1,8 +1,7 @@
 import { Button } from "@renderer/components/Button";
 import { EmptyImage } from "@renderer/components/EmptyState";
 import { Header } from "@renderer/components/Header";
-import { useNavigate } from "@solidjs/router";
-import { Component, createEffect, For, Show } from "solid-js";
+import { Component, createEffect, Show } from "solid-js";
 import { Gallery } from "../components/Gallery/Gallery";
 import { useAppStore } from "../store/AppStore";
 import styles from "./Home.module.css";
@@ -12,9 +11,7 @@ import { Main } from "@renderer/components/Main";
 import { SimilarImageGallery } from "@renderer/components/SimilarImageGallery";
 
 const Home: Component = () => {
-  const [state, { setSimilarImageGroup, getSimilarImageGroups }] =
-    useAppStore();
-  const navigate = useNavigate();
+  const [state, { getSimilarImageGroups }] = useAppStore();
   const { loadImages, setVisible } = useToolbar();
 
   createEffect(() => {
@@ -42,7 +39,9 @@ const Home: Component = () => {
             </div>
           }
         >
-          {getSimilarImageGroups().length === 0 && <Gallery />}
+          {getSimilarImageGroups().length === 0 && (
+            <Gallery images={state.images} />
+          )}
           {getSimilarImageGroups().length > 0 && (
             <SimilarImageGallery similarImageGroups={getSimilarImageGroups()} />
           )}

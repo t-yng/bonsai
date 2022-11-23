@@ -34,6 +34,8 @@ app.on("window-all-closed", () => {
 });
 
 app.whenReady().then(() => {
+  // NOTE: 画像の読み込みに時間がかかるので読み込んだ画像の情報はメモリでキャッシュする
+  // WARNING: 5MBの画像を100枚とか読み込むとメモリ不足でアプリがクラッシュする可能性あり
   let images: Image[] = [];
 
   ipcMain.handle("loadImages", async () => {
@@ -54,9 +56,12 @@ app.whenReady().then(() => {
 
   ipcMain.handle("removeImages", (_event, filePaths: string[]) => {
     for (const filePath of filePaths) {
-      const target = images.find((image) => filePath === image.filePath);
-      if (target) {
-        fs.unlinkSync(target.filePath);
+      const targetIndex = images.findIndex(
+        (image) => filePath === image.filePath
+      );
+      if (targetIndex) {
+        fs.unlinkSync(images[targetIndex].filePath);
+        images.splice(targetIndex, 1);
       }
     }
   });
