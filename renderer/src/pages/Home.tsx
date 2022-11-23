@@ -12,7 +12,7 @@ import { SimilarImageGallery } from "@renderer/components/SimilarImageGallery";
 
 const Home: Component = () => {
   const [state, { getSimilarImageGroups }] = useAppStore();
-  const { loadImages, setVisible } = useToolbar();
+  const [, { loadImages, setVisible }] = useToolbar();
 
   createEffect(() => {
     setVisible({

@@ -1,7 +1,5 @@
-import { Component } from "solid-js";
-import { Image } from "@common/models/Image";
-import { StoredImage } from "@renderer/store/AppStore";
-import { useToolbar } from "@renderer/hooks/useToolbar";
+import { Component, useContext } from "solid-js";
+import { ToolbarContext, useToolbar } from "@renderer/hooks/useToolbar";
 import { Button } from "../Button";
 import styles from "./Toolbar.module.css";
 import RoundedAdd from "~icons/material-symbols/add-rounded";
@@ -13,49 +11,45 @@ export type FeatureVisible = Partial<{
   group: boolean;
 }>;
 
-type ToolbarProps = {
-  images?: Image[];
-  onLoadImages?: (images: Image[]) => void;
-  onRemoveImages?: (removedImages: Image[]) => void;
-  onGroupSimilarImages?: (images: StoredImage[]) => void;
-};
+export const Toolbar: Component = () => {
+  const [
+    state,
+    {
+      loadImages,
+      removeImages,
+      groupSimilarImages,
+      unGroupSimilarImages,
+      setGrouped,
+    },
+  ] = useToolbar();
 
-export const Toolbar: Component<ToolbarProps> = (props) => {
-  const {
-    loadImages,
-    removeImages,
-    groupSimilarImages,
-    unGroupSimilarImages,
-    setGrouped,
-    visible,
-    grouped,
-  } = useToolbar();
+  const handleClickGroup = () => {
+    if (state.grouped) {
+      unGroupSimilarImages();
+    } else {
+      groupSimilarImages();
+    }
+    setGrouped(!state.grouped);
+  };
 
   return (
     <div class={styles.toolbar}>
       <div class={styles.targetActionWrapper}>
-        {visible.group && (
+        {state.visible.group && (
           <Button
-            variant={grouped ? "primary" : "outline"}
-            onClick={() => {
-              if (grouped) {
-                unGroupSimilarImages();
-              } else {
-                groupSimilarImages();
-              }
-              setGrouped(!grouped);
-            }}
+            variant={state.grouped ? "primary" : "outline"}
+            onClick={handleClickGroup}
           >
             類似画像をまとめる
           </Button>
         )}
-        {visible.remove && (
+        {state.visible.remove && (
           <Button icon={Delete} onClick={() => removeImages()}>
             削除
           </Button>
         )}
       </div>
-      {visible.load && (
+      {state.visible.load && (
         <Button icon={RoundedAdd} onClick={() => loadImages()}>
           画像読み込む
         </Button>

@@ -2,7 +2,6 @@ import { Image } from "@common/models/Image";
 import { StoredImage, useAppStore } from "@renderer/store/AppStore";
 import {
   Component,
-  ComponentProps,
   createContext,
   createUniqueId,
   ParentProps,
@@ -26,7 +25,7 @@ type Dispatcher = {
   setGrouped: (grouped: boolean) => void;
 };
 
-const ToolbarContext = createContext<[ToolbarState, Dispatcher]>([
+export const ToolbarContext = createContext<[ToolbarState, Dispatcher]>([
   {
     visible: {},
     grouped: false,
@@ -117,12 +116,14 @@ export const useToolbar = () => {
     setImages([...unGroupedImages]);
   };
 
-  return {
-    loadImages,
-    removeImages,
-    groupSimilarImages,
-    unGroupSimilarImages,
-    ...toolbarState,
-    ...toolbarDispatcher,
-  };
+  return [
+    toolbarState,
+    {
+      loadImages,
+      removeImages,
+      groupSimilarImages,
+      unGroupSimilarImages,
+      ...toolbarDispatcher,
+    },
+  ] as const;
 };
