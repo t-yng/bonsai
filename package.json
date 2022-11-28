@@ -1,8 +1,8 @@
 {
-  "name": "my-electron-app",
-  "version": "1.0.0",
-  "description": "Hello World!",
-  "author": "Jane Doe",
+  "name": "bonsai",
+  "version": "0.1.0",
+  "description": "remove similar photos tool",
+  "author": "t-yng",
   "license": "MIT",
   "main": "./dist/electron/main.js",
   "scripts": {
